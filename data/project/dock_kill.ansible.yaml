@@ -1,0 +1,7 @@
+---
+- hosts: "{{ target_host }}"
+  tasks:
+    - name: Ensure container is stopped
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
