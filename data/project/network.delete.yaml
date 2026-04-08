@@ -1,0 +1,7 @@
+---
+- hosts: "{{ target_host }}"
+  tasks:
+    - name: Ensure network is deleted
+      community.docker.docker_network:
+        name: "{{ network_name }}"
+        state: absent

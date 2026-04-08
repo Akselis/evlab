@@ -1,0 +1,7 @@
+---
+- hosts: "{{ target_host }}"
+  tasks:
+    - name: Ensure network is created
+      community.docker.docker_network:
+        name: "{{ network_name }}"
+        state: present

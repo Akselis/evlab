@@ -2,20 +2,17 @@ import ansible_runner
 
 import core.util.dir as dir
 
-OUTPUT_FILE = "evlab.log"
-
-RUN = "dock_run.ansible.yaml"
-STOP = "dock_kill.ansible.yaml"
+NETWORK_CREATE = "network.create.yaml"
+NETWORK_DELETE = "network.delete.yaml"
 
 
-def start_container(host, image, name):
+def create_network(host, name):
 
     r = ansible_runner.run(
         private_data_dir=dir.BASE_DIR,
-        playbook=RUN,
+        playbook=NETWORK_CREATE,
         extravars={
             "target_host": host,
-            "container_image": image,
             "container_name": name,
         },
         json_mode=True,
@@ -27,15 +24,16 @@ def start_container(host, image, name):
         return False
 
 
-def stop_container(host, name):
+def delete_network(host, name):
 
     r = ansible_runner.run(
         private_data_dir=dir.BASE_DIR,
-        playbook=STOP,
+        playbook=NETWORK_DELETE,
         extravars={
             "target_host": host,
             "container_name": name,
         },
+        json_mode=True,
     )
 
     if r.rc == 0:

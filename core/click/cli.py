@@ -1,6 +1,7 @@
 import click
 
-import core.dock.ops as dops
+import core.ansible.inventory as inv
+import core.dock.container as dops
 
 
 @click.group()
@@ -14,8 +15,15 @@ def lab():
 
 
 @lab.command()
-def init():
-    pass
+@click.option("--name", required=True, help="Name for the container.")
+@click.option("--host", default="localhost", help="Host IP.")
+def init(name, host):
+    i = inv.EvLabInventory()
+    i.group_insert(name)
+    host_vars = {"ansible_host": host} if host is not None else None
+    host_vars = {"ansible_connection": "local"} if host == "localhost" else host_vars
+    if host is not None and host_vars is not None:
+        i.host_insert_update(host, name, host_vars=host_vars)
 
 
 @cli.group()
