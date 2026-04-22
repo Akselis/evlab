@@ -84,6 +84,9 @@ class ContainerConfigProvider:
             "restart_policy": "no",
             "force_kill": False,
             "keep_volumes": False,
+            "labels": {},
+            "env": {},
+            "env_file": None,
         }
 
     def Start(self, host, image, name, config=None):

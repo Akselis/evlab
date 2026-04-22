@@ -15,3 +15,6 @@
         restart_policy: "{{ restart_policy }}" # on-failure, always, never
         force_kill: "{{ force_kill }}" #true/false
         keep_volumes: "{{ keep_volumes }}" # true/false
+        labels: "{{ labels }}"
+        env: "{{ env }}"
+        env_file: "{{ env_file }}"
