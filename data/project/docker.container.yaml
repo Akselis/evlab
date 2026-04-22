@@ -1,6 +1,6 @@
 - hosts: "{{ target_host }}"
   tasks:
-    - name: Ensure container is running
+    - name: Ensure container state
       community.docker.docker_container:
         name: "{{ container_name }}"
         image: "{{ container_image }}"
@@ -10,6 +10,8 @@
         # absent: container is removed
         # healthy: health check
         # present: container is created
-        restart: "{{ restart }}"
-        paused: "{{ paused }}"
-        restart_policy: "{{ restart_policy }}"
+        restart: "{{ restart }}" # true/false
+        paused: "{{ paused }}" # true/false
+        restart_policy: "{{ restart_policy }}" # on-failure, always, never
+        force_kill: "{{ force_kill }}" #true/false
+        keep_volumes: "{{ keep_volumes }}" # true/false

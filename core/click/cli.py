@@ -1,7 +1,12 @@
+from operator import is_
+
 import click
 
 import core.ansible.inventory as inv
 import core.dock.container as dops
+
+cp = dops.ContainerConfigProvider()
+cc = dops.ContainerController()
 
 
 @click.group()
@@ -37,10 +42,11 @@ def service():
 @click.option("--name", required=True, help="Name for the container.")
 def start(host, image, name):
     click.echo(f"Running {image} on {host}...")
-    res = dops.start_container(host, image, name)
+    res = cc.Run(cp.Start(host, image, name))
 
-    if res:
+    if res[0]:
         click.secho("Success!", fg="green")
+        click.secho(res[1], fg="green")
     else:
         click.secho("Failed. Check the output above for details.", fg="red")
 
@@ -50,9 +56,59 @@ def start(host, image, name):
 @click.option("--name", required=True, help="Name for the container.")
 def stop(host, name):
     click.echo(f"Stopping container {name} on {host}...")
-    res = dops.stop_container(host, name)
+    res = cc.Run(cp.Stop(host, name))
 
-    if res:
+    if res[0]:
         click.secho("Success!", fg="green")
+        click.secho(res[1], fg="green")
+    else:
+        click.secho("Failed. Check the output above for details.", fg="red")
+
+
+@service.command()
+@click.option("--host", default="localhost", help="Target host from inventory.")
+@click.option("--name", required=True, help="Name for the container.")
+def pause(host, name):
+    click.echo(f"Pausing container {name} on {host}...")
+    res = cc.Run(cp.Pause(host, name))
+
+    if res[0]:
+        click.secho("Success!", fg="green")
+        click.secho(res[1], fg="green")
+    else:
+        click.secho("Failed. Check the output above for details.", fg="red")
+
+
+@service.command()
+@click.option("--host", default="localhost", help="Target host from inventory.")
+@click.option("--name", required=True, help="Name for the container.")
+def unpause(host, name):
+    click.echo(f"Resuming container {name} on {host}...")
+    res = cc.Run(cp.Unpause(host, name))
+
+    if res[0]:
+        click.secho("Success!", fg="green")
+        click.secho(res[1], fg="green")
+    else:
+        click.secho("Failed. Check the output above for details.", fg="red")
+
+
+@service.command()
+@click.option("--host", default="localhost", help="Target host from inventory.")
+@click.option("--name", required=True, help="Name for the container.")
+@click.option(
+    "-force",
+    required=False,
+    default=False,
+    is_flag=True,
+    help="Image to use for the container.",
+)
+def destroy(host, name, force):
+    click.echo(f"Destorying container {name} on {host}...")
+    res = cc.Run(cp.Destroy(host, name, force))
+
+    if res[0]:
+        click.secho("Success!", fg="green")
+        click.secho(res[1], fg="green")
     else:
         click.secho("Failed. Check the output above for details.", fg="red")
