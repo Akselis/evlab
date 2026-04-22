@@ -1,0 +1,15 @@
+- hosts: "{{ target_host }}"
+  tasks:
+    - name: Ensure container is running
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ container_image }}"
+        state: "{{ state }}"
+        # started: present -> running
+        # stopped: present -> stopped
+        # absent: container is removed
+        # healthy: health check
+        # present: container is created
+        restart: "{{ restart }}"
+        paused: "{{ paused }}"
+        restart_policy: "{{ restart_policy }}"
